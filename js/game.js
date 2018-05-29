@@ -4,7 +4,6 @@ function Game(canvasElement) {
   this.frameCounter = 0;
   this.framesTick = 30;
   this.board = new Board(this.ctx);
-  this.board.fallingPiece = new Piece();
 }
 
 Game.prototype.start = function() {
@@ -21,5 +20,25 @@ Game.prototype.tickUpdate = function () {
   if (this.frameCounter >= this.framesTick) {
     this.frameCounter = 0;
     this.board.tickUpdate();
+  }
+}
+
+Game.prototype.TOP = 38;
+Game.prototype.DOWN = 40;
+Game.prototype.LEFT = 37;
+Game.prototype.RIGHT = 39;
+
+Game.prototype.onkeydown = function(key) {
+  switch(key) {
+    case this.TOP:
+      this.board.rotateFallingPiece(false);
+      break;
+    case this.RIGHT:
+      break;
+    case this.DOWN:
+      this.board.rotateFallingPiece(true);
+      break;
+    case this.LEFT:
+      break;
   }
 }

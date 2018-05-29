@@ -22,7 +22,7 @@ function Board(ctx) {
     [0,0,0,0,0,0,0,0,0,0]
   ];
 
-  this.fallingPiece = null;
+  this.fallingPiece = new IPiece();
 }
 
 Board.prototype.update = function() {
@@ -44,9 +44,9 @@ Board.prototype.drawBoard =  function() {
     for (var row = 0; row < this.boardMatrix.length; row++) {
       this.ctx.fillStyle = this.boardMatrix[row][col] === 0 ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 200, 0, 1)";
       this.ctx.fillRect(this.boardPosition.x + (this.cellSize + this.cellSeparation) * col,
-                        this.boardPosition.y + (this.cellSize + this.cellSeparation) * row,
-                        this.cellSize,
-                        this.cellSize);
+      this.boardPosition.y + (this.cellSize + this.cellSeparation) * row,
+      this.cellSize,
+      this.cellSize);
     }
   }
   this.drawFallingPiece();
@@ -65,6 +65,10 @@ Board.prototype.drawFallingPiece = function() {
       }
     }
   }
+}
+
+Board.prototype.rotateFallingPiece = function(clockWise) {
+  this.fallingPiece.rotate(clockWise);
 }
 
 Board.prototype.setPieceInBoard = function() {

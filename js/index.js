@@ -7,5 +7,10 @@ window.onload = function() {
 
   document.body.prepend(canvas);
 
-  new Game(canvas).start();
+  this.game = new Game(canvas);
+  this.game.start();
+
+  document.onkeydown = function(e) {
+    this.game.onkeydown(e.keyCode);
+  }.bind(this);
 };

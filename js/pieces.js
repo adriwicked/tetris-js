@@ -1,6 +1,6 @@
 function Piece(boardPosition) {
-  this.shape = [[]];
-  this.position = { x: 2, y: 3 };
+  this.position = { x: 3, y: 0 };
+  this.rotationPosition = 0;
 }
 
 Piece.prototype.fall = function() {
@@ -8,6 +8,8 @@ Piece.prototype.fall = function() {
 }
 
 Piece.prototype.checkCollision = function(board) {
+  // Aquí debería tener ya referencia a shape?
+
   return false;
 }
 

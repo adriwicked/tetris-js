@@ -22,11 +22,11 @@ function Board(ctx) {
     [0,0,0,0,0,0,0,0,0,0]
   ];
 
-  this.fallingPiece = new IPiece();
+  this.fallingPiece = new IPiece(this.ctx);
 }
 
 Board.prototype.update = function() {
-  this.drawBoard();
+  this.draw();
 }
 
 Board.prototype.tickUpdate = function() {
@@ -34,12 +34,18 @@ Board.prototype.tickUpdate = function() {
     this.setPieceInBoard();
     this.checkLines();
   } else {
-    this.fallingPiece.fall();
+    this.fallingPiece.down();
   }
 }
 
-Board.prototype.drawBoard =  function() {
+Board.prototype.draw = function() {
   this.ctx.beginPath();
+  this.drawBoard();
+  this.fallingPiece.draw({ctx: this.ctx, pos: this.boardPosition, cellSize: this.cellSize, cellSeparation: this.cellSeparation });
+  this.ctx.closePath();
+}
+
+Board.prototype.drawBoard =  function() {
   for (var col = 0; col < this.boardMatrix[0].length; col++) {
     for (var row = 0; row < this.boardMatrix.length; row++) {
       this.ctx.fillStyle = this.boardMatrix[row][col] === 0 ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 200, 0, 1)";
@@ -49,8 +55,6 @@ Board.prototype.drawBoard =  function() {
       this.cellSize);
     }
   }
-  this.drawFallingPiece();
-  this.ctx.closePath();
 };
 
 Board.prototype.drawFallingPiece = function() {
@@ -67,8 +71,8 @@ Board.prototype.drawFallingPiece = function() {
   }
 }
 
-Board.prototype.rotateFallingPiece = function(clockWise) {
-  this.fallingPiece.rotate(clockWise);
+Board.prototype.rotateFallingPiece = function() {
+  this.fallingPiece.rotate();
 }
 
 Board.prototype.setPieceInBoard = function() {

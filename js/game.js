@@ -3,7 +3,6 @@ function Game() {
   this.framesTick = 15;
 
   this.board = new Board();
-  //this.board.onPieceSet = this.createNewPiece;
   
   this.fallingPiece = new TPiece();
 }
@@ -26,12 +25,47 @@ Game.prototype.tickUpdate = function () {
   if (this.frameCounter >= this.framesTick) {
     this.frameCounter = 0;
     
-    this.fallingPiece.down(this.board);
+    // Piece move down logic
+    if (!this.checkCollision(this.board, this.fallingPiece.getPossiblePieceState("down"))) {
+      this.fallingPiece.down();
+    } else {
+      this.board.setPieceInBoard(this.fallingPiece);
+      this.createNewPiece();
+    }
   }
 }
 
 Game.prototype.createNewPiece = function() {  
   this.fallingPiece = new TPiece();
+};
+
+Game.prototype.checkCollision = function(board, piece) {  
+  for (var row = 0; row < piece.shape.length; row++) {    
+    for (var col = 0; col < piece.shape[0].length; col++) {
+      if (piece.shape[row][col] !== 0 && board.boardMatrix[row + piece.y][col + piece.x] !== 0) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+Game.prototype.movePieceDown = function() {  
+  if (!this.checkCollision(this.board, this.fallingPiece.getPossiblePieceState("down"))) {
+    this.fallingPiece.down();     
+  }
+};
+
+Game.prototype.movePiece = function(right) {  
+  if(right) {
+    if (!this.checkCollision(this.board, this.fallingPiece.getPossiblePieceState("right"))) {
+      this.fallingPiece.move(right);
+    }
+  } else {
+    if (!this.checkCollision(this.board, this.fallingPiece.getPossiblePieceState("left"))) {
+      this.fallingPiece.move(right);
+    }
+  }
 };
 
 Game.prototype.TOP = 38;
@@ -44,14 +78,14 @@ Game.prototype.onkeydown = function(key) {
     case this.TOP:
       this.fallingPiece.rotate();      
       break;
-    case this.RIGHT:
-      this.fallingPiece.move(true);
-      break;
     case this.DOWN: 
-      this.fallingPiece.down();     
+      this.movePieceDown();
+      break;
+    case this.RIGHT:
+      this.movePiece(true);
       break;
     case this.LEFT:
-      this.fallingPiece.move(false);
+      this.movePiece(false);
       break;
   }
 }

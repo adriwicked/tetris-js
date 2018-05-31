@@ -10,8 +10,6 @@ window.onload = function() {
   this.game = new Game(canvas);
   this.game.start();
 
-  this.game.board.onPieceSet = game.createNewPiece.bind(game);
-
   document.onkeydown = function(e) {
     this.game.onkeydown(e.keyCode);
   }.bind(this);

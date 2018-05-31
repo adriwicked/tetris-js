@@ -1,12 +1,12 @@
 var Painter = function () {
   var canvas = {};
   var ctx = {};
-  var cellSize = 20;
-  var cellSeparation = 2;
+  var cellSize = 30;
+  var cellSeparation = 3;
   var boardPosition = { x: 0, y: 0 };
 
   function centerBoard() {
-    var boardWidth = (cellSize + cellSeparation) * 10;
+    var boardWidth = (cellSize + cellSeparation) * 12;
     boardPosition.x = canvas.width / 2 - boardWidth / 2;
     boardPosition.y = canvas.height / 10;
   }
@@ -31,7 +31,7 @@ var Painter = function () {
                         cellSize);
         }
       }
-      ctx.closePath();      
+      ctx.closePath();
     },
     
     drawPiece : function(piece) {

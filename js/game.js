@@ -1,17 +1,23 @@
-function Game(canvasElement) {
-  this.canvas = canvasElement;
-  this.ctx = canvas.getContext("2d");
+function Game() {
   this.frameCounter = 0;
-  this.framesTick = 100;
-  this.board = new Board(this.ctx);
+  this.framesTick = 15;
+
+  this.board = new Board();
+  //this.board.onPieceSet = this.createNewPiece;
+  
+  this.fallingPiece = new TPiece();
 }
 
 Game.prototype.start = function() {
-  this.intervalId = setInterval(function() {
-    this.ctx.clearRect(0,0,this.ctx.canvas.width, this.ctx.canvas.height)
-    this.board.update();
+  setInterval(function() {        
+
     this.tickUpdate();
-  }.bind(this), 16);
+
+    Painter.clearCanvas();
+    Painter.drawBoard(this.board);
+    Painter.drawPiece(this.fallingPiece);
+
+  }.bind(this), 32);
 }
 
 Game.prototype.tickUpdate = function () {
@@ -19,9 +25,14 @@ Game.prototype.tickUpdate = function () {
 
   if (this.frameCounter >= this.framesTick) {
     this.frameCounter = 0;
-    this.board.tickUpdate();
+    
+    this.fallingPiece.down(this.board);
   }
 }
+
+Game.prototype.createNewPiece = function() {  
+  this.fallingPiece = new TPiece();
+};
 
 Game.prototype.TOP = 38;
 Game.prototype.DOWN = 40;
@@ -31,16 +42,16 @@ Game.prototype.RIGHT = 39;
 Game.prototype.onkeydown = function(key) {
   switch(key) {
     case this.TOP:
-      this.board.rotateFallingPiece();      
+      this.fallingPiece.rotate();      
       break;
     case this.RIGHT:
-      this.board.fallingPiece.move(true);
+      this.fallingPiece.move(true);
       break;
     case this.DOWN: 
-      this.board.fallingPiece.down();     
+      this.fallingPiece.down();     
       break;
     case this.LEFT:
-      this.board.fallingPiece.move(false);
+      this.fallingPiece.move(false);
       break;
   }
 }

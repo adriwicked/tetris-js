@@ -5,21 +5,11 @@ function Piece() {
   this.color = "rgba(200, 0, 0, 1)";
 }
 
-Piece.prototype.down = function() {
-  this.position.y++;
-}
-
-Piece.prototype.draw = function(boardInfo) {
-  boardInfo.ctx.fillStyle = this.color;
-  for (var row = 0; row < this.shape.length; row++) {
-    for (var col = 0; col < this.shape[0].length; col++) {
-      if (this.shape[row][col] === 1) {
-        boardInfo.ctx.fillRect(boardInfo.pos.x + (boardInfo.cellSize + boardInfo.cellSeparation) * this.position.x + (boardInfo.cellSize + boardInfo.cellSeparation) * col,
-                               boardInfo.pos.y + (boardInfo.cellSize + boardInfo.cellSeparation) * this.position.y + (boardInfo.cellSize + boardInfo.cellSeparation) * row,
-                               boardInfo.cellSize,
-                               boardInfo.cellSize);
-      }
-    }
+Piece.prototype.down = function(board) {  
+  if (!this.checkCollision(board, { x: this.position.x, y: this.position.y + 1, shape: this.shape })) {
+    this.position.y++;
+  } else {
+    board.setPieceInBoard(this);
   }
 }
 
@@ -32,8 +22,16 @@ Piece.prototype.rotate = function() {
   this.shape = this.rotations[this.rotationPosition];
 }
 
-Piece.prototype.checkCollision = function() {  
-
+Piece.prototype.checkCollision = function(board, nextPos) {  
+  
+  for (var row = 0; row < nextPos.shape.length; row++) {    
+    for (var col = 0; col < nextPos.shape[0].length; col++) {
+      if (nextPos.shape[row][col] === 1 && board.boardMatrix[row + nextPos.y][col + nextPos.x] === 1) {
+        return true;
+      }
+    }
+  }
+  
   return false;
 }
 

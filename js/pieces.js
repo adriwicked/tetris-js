@@ -82,7 +82,8 @@ Piece.prototype.getPossiblePieceState = function(state) {
       potentialPieceState.x = this.position.x - 1;
       break;
     case "rotation":
-
+      var possibleRotation = this.rotationPosition === 3 ? 0 : this.rotationPosition + 1;      
+      potentialPieceState.shape = this.rotations[possibleRotation];
       break;
     case "ghost":
     
@@ -123,6 +124,17 @@ function TPiece() {
 
 TPiece.prototype = Object.create(Piece.prototype);
 TPiece.prototype.constructor = Piece;
+TPiece.prototype.clone = function() {
+  var newPiece = new TPiece();
+  var copy = Object.assign({}, this);
+  newPiece.rotations = copy.rotations;
+  newPiece.shape = copy.shape;
+  newPiece.color = copy.color;
+  newPiece.position = copy.position;
+  newPiece.rotationPosition = copy.rotationPosition;
+
+  return newPiece;
+}
 
 function IPiece() {
   Piece.call(this)

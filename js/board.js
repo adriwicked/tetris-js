@@ -14,8 +14,8 @@ function Board() {
     [9,0,0,0,0,0,0,0,0,0,0,9],
     [9,0,0,0,0,0,0,0,0,0,0,9],
     [9,0,0,0,0,0,0,0,0,0,0,9],
-    [9,0,0,0,0,0,0,0,0,0,0,9],
-    [9,0,0,0,0,0,0,0,0,0,0,9],
+    [9,1,0,1,0,0,0,1,1,1,1,9],
+    [9,1,1,1,1,0,1,1,1,1,1,9],
     [9,9,9,9,9,9,9,9,9,9,9,9],
   ];  
 }
@@ -23,12 +23,58 @@ function Board() {
 Board.prototype.setPieceInBoard = function(piece) {
   for (var i = 0; i < piece.shape.length; i++) {
     for (var j = 0; j < piece.shape[0].length; j++) {
-      if (piece.shape[i][j] === 1)
+      if (piece.shape[i][j] === 1) {
         this.boardMatrix[piece.position.y + i][piece.position.x + j] = piece.shape[i][j];
+      }
     }
   }  
 }
 
+Board.prototype.checkCollision = function(piece) {  
+  for (var row = 0; row < piece.shape.length; row++) {    
+    for (var col = 0; col < piece.shape[0].length; col++) {
+      if (piece.shape[row][col] !== 0 && this.boardMatrix[(row + piece.y)][(col + piece.x)] !== 0) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
 Board.prototype.checkLines = function() {
-  
+  var rowsWithLine = [];
+  for (var row = 0; row < this.boardMatrix.length - 1; row++) {
+    if(!this.boardMatrix[row].includes(0)) {
+      rowsWithLine.push(row);
+    }
+  }
+  return rowsWithLine;
+}
+
+Board.prototype.clearLines = function(rows) {
+  for (var i = 0; i < rows.length; i++) {
+    this.boardMatrix.splice(rows[i], 1);
+    this.boardMatrix.unshift([9,0,0,0,0,0,0,0,0,0,0,9]);
+  }
+}
+
+Board.prototype.getGhost = function(piece) {
+  var pieceAux = piece.clone();
+  console.log(piece === pieceAux)
+  pieceAux.y = pieceAux.position.y;
+  pieceAux.x = pieceAux.position.x;
+  pieceAux =  this._getGhost(pieceAux);
+  pieceAux.position.y = pieceAux.y - 5;
+  pieceAux.position.x = pieceAux.x;
+  return pieceAux;
+}
+
+Board.prototype._getGhost = function(piece) {
+  if (this.checkCollision(piece)) {
+    piece.y--;
+    return piece;
+  } else {
+    piece.y++;
+    return this._getGhost(piece);
+  }
 }

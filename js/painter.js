@@ -18,7 +18,9 @@ var Painter = function () {
       centerBoard();
     },
     
-    clearCanvas: function() { ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height) },
+    clearCanvas: function() { 
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height) 
+    },
 
     drawBoard : function(board) {
       ctx.beginPath();

@@ -15,6 +15,8 @@ Game.prototype.start = function() {
     Painter.clearCanvas();
     Painter.drawBoard(this.board);
     Painter.drawPiece(this.fallingPiece);
+    // console.log(this.board.getGhost(this.fallingPiece));
+    // Painter.drawPiece(this.board.getGhost(this.fallingPiece));
 
   }.bind(this), 32);
 }
@@ -25,12 +27,19 @@ Game.prototype.tickUpdate = function () {
   if (this.frameCounter >= this.framesTick) {
     this.frameCounter = 0;
     
+    
     // Piece move down logic
-    if (!this.checkCollision(this.board, this.fallingPiece.getPossiblePieceState("down"))) {
+    if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("down"))) {
       this.fallingPiece.down();
     } else {
       this.board.setPieceInBoard(this.fallingPiece);
       this.createNewPiece();
+    }
+
+    // Clear lines
+    var lines = this.board.checkLines();
+    if (lines.length > 0) {
+      this.board.clearLines(lines);
     }
   }
 }
@@ -39,44 +48,44 @@ Game.prototype.createNewPiece = function() {
   this.fallingPiece = new TPiece();
 };
 
-Game.prototype.checkCollision = function(board, piece) {  
-  for (var row = 0; row < piece.shape.length; row++) {    
-    for (var col = 0; col < piece.shape[0].length; col++) {
-      if (piece.shape[row][col] !== 0 && board.boardMatrix[row + piece.y][col + piece.x] !== 0) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
-
 Game.prototype.movePieceDown = function() {  
-  if (!this.checkCollision(this.board, this.fallingPiece.getPossiblePieceState("down"))) {
+  if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("down"))) {
     this.fallingPiece.down();     
   }
 };
 
 Game.prototype.movePiece = function(right) {  
   if(right) {
-    if (!this.checkCollision(this.board, this.fallingPiece.getPossiblePieceState("right"))) {
+    if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("right"))) {
       this.fallingPiece.move(right);
     }
   } else {
-    if (!this.checkCollision(this.board, this.fallingPiece.getPossiblePieceState("left"))) {
+    if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("left"))) {
       this.fallingPiece.move(right);
     }
   }
 };
 
+Game.prototype.rotatePiece = function() {
+  if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("rotation"))) {
+    this.fallingPiece.rotate();
+  }
+}
+
+Game.prototype.dropKey = function() {
+  // Me quedo position y shape del ghost
+}
+
 Game.prototype.TOP = 38;
 Game.prototype.DOWN = 40;
 Game.prototype.LEFT = 37;
 Game.prototype.RIGHT = 39;
+Game.prototype.SPACE = 32;
 
 Game.prototype.onkeydown = function(key) {
   switch(key) {
     case this.TOP:
-      this.fallingPiece.rotate();      
+      this.rotatePiece();     
       break;
     case this.DOWN: 
       this.movePieceDown();
@@ -86,6 +95,9 @@ Game.prototype.onkeydown = function(key) {
       break;
     case this.LEFT:
       this.movePiece(false);
+      break;
+    case this.SPACE:
+
       break;
   }
 }

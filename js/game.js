@@ -1,6 +1,6 @@
 function Game() {
   this.frameCounter = 0;
-  this.framesTick = 15;
+  this.framesTick = 40;
 
   this.board = new Board();
   
@@ -13,10 +13,10 @@ Game.prototype.start = function() {
     this.tickUpdate();
 
     Painter.clearCanvas();
+    Painter.drawBackground();
     Painter.drawBoard(this.board);
-    Painter.drawPiece(this.fallingPiece);
-    // console.log(this.board.getGhost(this.fallingPiece));
-    // Painter.drawPiece(this.board.getGhost(this.fallingPiece));
+    Painter.drawPiece(this.board.getGhost(this.fallingPiece), true);
+    Painter.drawPiece(this.fallingPiece, false);    
 
   }.bind(this), 32);
 }
@@ -26,8 +26,7 @@ Game.prototype.tickUpdate = function () {
 
   if (this.frameCounter >= this.framesTick) {
     this.frameCounter = 0;
-    
-    
+        
     // Piece move down logic
     if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("down"))) {
       this.fallingPiece.down();
@@ -35,17 +34,20 @@ Game.prototype.tickUpdate = function () {
       this.board.setPieceInBoard(this.fallingPiece);
       this.createNewPiece();
     }
-
-    // Clear lines
-    var lines = this.board.checkLines();
-    if (lines.length > 0) {
-      this.board.clearLines(lines);
-    }
+    
+    this.clearLines();
   }
 }
 
+Game.prototype.clearLines = function() {  
+  var lines = this.board.checkLines();
+    if (lines.length > 0) {
+      this.board.clearLines(lines);
+    }
+};
+
 Game.prototype.createNewPiece = function() {  
-  this.fallingPiece = new TPiece();
+  this.fallingPiece = PieceFactory();
 };
 
 Game.prototype.movePieceDown = function() {  
@@ -72,8 +74,11 @@ Game.prototype.rotatePiece = function() {
   }
 }
 
-Game.prototype.dropKey = function() {
-  // Me quedo position y shape del ghost
+Game.prototype.dropPiece = function() {
+  var ghost = this.board.getGhost(this.fallingPiece);  
+  this.board.setPieceInBoard(ghost);
+  this.clearLines();
+  this.createNewPiece();
 }
 
 Game.prototype.TOP = 38;
@@ -97,7 +102,7 @@ Game.prototype.onkeydown = function(key) {
       this.movePiece(false);
       break;
     case this.SPACE:
-
+      this.dropPiece();
       break;
   }
 }

@@ -1,51 +1,5 @@
-var PieceFactory = function() {
-  var position = { x: 3, y: 0 }
-  var rotationPosition = 0;
-
-  // Aquí se hace un random, se escoge rotations y se le pone la primera rotation a shape
-
-  return {
-    down: function(board) {  
-      position.y++;
-    },
-    
-    move: function(right) {
-      right ? position.x++ : position.x--;
-    },
-    
-    rotate: function() {  
-      rotationPosition === 3 ? rotationPosition = 0 : rotationPosition++;      
-      shape = rotations[rotationPosition];
-    },
-
-    getPotentialPieceState: function(state) {
-      var potentialPieceState = {};
-      
-      switch (state) {
-        case "down":
-          potentialPieceState = {
-            shape: this.shape,
-            x: this.position.x,
-            y: this.position.y + 1
-          }
-          break;
-        case "rotation":
-
-          break;
-        case "ghost":
-
-          break;
-      }
-    
-      return potentialPieceState;
-    }
-  }
-}
-
-//-----------------------------------------------------------------
-
 function Piece() {  
-  this.position = { x: 3, y: 2 };
+  this.position = { x: 4, y: 0 };
   this.shape = [[]];
   this.rotationPosition = 0;
   this.color = "rgba(200, 0, 0, 1)";
@@ -67,26 +21,25 @@ Piece.prototype.rotate = function() {
 Piece.prototype.getPossiblePieceState = function(state) {
   var potentialPieceState = {
     shape: this.shape,
-    x: this.position.x,
-    y: this.position.y
+    position: {
+      x: this.position.x,
+      y: this.position.y
+    }
   };
   
   switch (state) {
     case "down":
-      potentialPieceState.y = this.position.y + 1;
+      potentialPieceState.position.y = this.position.y + 1;
       break;
     case "right":
-      potentialPieceState.x = this.position.x + 1;
+      potentialPieceState.position.x = this.position.x + 1;
       break;
     case "left":
-      potentialPieceState.x = this.position.x - 1;
+      potentialPieceState.position.x = this.position.x - 1;
       break;
     case "rotation":
       var possibleRotation = this.rotationPosition === 3 ? 0 : this.rotationPosition + 1;      
       potentialPieceState.shape = this.rotations[possibleRotation];
-      break;
-    case "ghost":
-    
       break;
   }
 
@@ -124,17 +77,6 @@ function TPiece() {
 
 TPiece.prototype = Object.create(Piece.prototype);
 TPiece.prototype.constructor = Piece;
-TPiece.prototype.clone = function() {
-  var newPiece = new TPiece();
-  var copy = Object.assign({}, this);
-  newPiece.rotations = copy.rotations;
-  newPiece.shape = copy.shape;
-  newPiece.color = copy.color;
-  newPiece.position = copy.position;
-  newPiece.rotationPosition = copy.rotationPosition;
-
-  return newPiece;
-}
 
 function IPiece() {
   Piece.call(this)
@@ -167,3 +109,163 @@ function IPiece() {
 
 IPiece.prototype = Object.create(Piece.prototype);
 IPiece.prototype.constructor = Piece;
+
+function OPiece() {
+  Piece.call(this)
+
+  this.rotations = [
+    [[1,1,0,0],
+     [1,1,0,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+    
+    [[1,1,0,0],
+     [1,1,0,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+    
+    [[1,1,0,0],
+     [1,1,0,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+    
+    [[1,1,0,0],
+     [1,1,0,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+  ];
+  
+  this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
+}
+
+OPiece.prototype = Object.create(Piece.prototype);
+OPiece.prototype.constructor = Piece;
+
+function LPiece() {
+  Piece.call(this)
+
+  this.rotations = [
+    [[1,0,0,0],
+     [1,1,1,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+    
+    [[0,1,1,0],
+     [0,1,0,0],
+     [0,1,0,0],
+     [0,0,0,0]],
+    
+    [[0,0,0,0],
+     [1,1,1,0],
+     [0,0,1,0],
+     [0,0,0,0]],
+    
+    [[0,1,0,0],
+     [0,1,0,0],
+     [1,1,0,0],
+     [0,0,0,0]],
+  ];
+  
+  this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
+}
+
+LPiece.prototype = Object.create(Piece.prototype);
+LPiece.prototype.constructor = Piece;
+
+function JPiece() {
+  Piece.call(this)
+
+  this.rotations = [
+    [[0,0,1,0],
+     [1,1,1,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+    
+    [[0,1,0,0],
+     [0,1,0,0],
+     [0,1,1,0],
+     [0,0,0,0]],
+    
+    [[0,0,0,0],
+     [1,1,1,0],
+     [1,0,0,0],
+     [0,0,0,0]],
+    
+    [[1,1,0,0],
+     [0,1,0,0],
+     [0,1,0,0],
+     [0,0,0,0]],
+  ];
+  
+  this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
+}
+
+JPiece.prototype = Object.create(Piece.prototype);
+JPiece.prototype.constructor = Piece;
+
+function SPiece() {
+  Piece.call(this)
+
+  this.rotations = [
+    [[0,1,1,0],
+     [1,1,0,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+    
+    [[0,1,0,0],
+     [0,1,1,0],
+     [0,0,1,0],
+     [0,0,0,0]],
+    
+    [[0,1,1,0],
+     [1,1,0,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+    
+    [[0,1,0,0],
+     [0,1,1,0],
+     [0,0,1,0],
+     [0,0,0,0]],
+  ];
+  
+  this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
+}
+
+SPiece.prototype = Object.create(Piece.prototype);
+SPiece.prototype.constructor = Piece;
+
+function ZPiece() {
+  Piece.call(this)
+
+  this.rotations = [
+    [[1,1,0,0],
+     [0,1,1,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+    
+    [[0,0,1,0],
+     [0,1,1,0],
+     [0,1,0,0],
+     [0,0,0,0]],
+    
+    [[1,1,0,0],
+     [0,1,1,0],
+     [0,0,0,0],
+     [0,0,0,0]],
+    
+    [[0,0,1,0],
+     [0,1,1,0],
+     [0,1,0,0],
+     [0,0,0,0]],
+  ];
+  
+  this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
+}
+
+ZPiece.prototype = Object.create(Piece.prototype);
+ZPiece.prototype.constructor = Piece;

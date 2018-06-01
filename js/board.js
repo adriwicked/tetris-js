@@ -1,5 +1,6 @@
 function Board() {  
   this.boardMatrix = [
+    [9,0,0,0,0,0,0,0,0,0,0,9], // This row won't be painted. Just to spawn pieces in range
     [9,0,0,0,0,0,0,0,0,0,0,9],
     [9,0,0,0,0,0,0,0,0,0,0,9],
     [9,0,0,0,0,0,0,0,0,0,0,9],
@@ -14,8 +15,8 @@ function Board() {
     [9,0,0,0,0,0,0,0,0,0,0,9],
     [9,0,0,0,0,0,0,0,0,0,0,9],
     [9,0,0,0,0,0,0,0,0,0,0,9],
-    [9,1,0,1,0,0,0,1,1,1,1,9],
-    [9,1,1,1,1,0,1,1,1,1,1,9],
+    [9,0,0,0,0,0,0,0,0,0,0,9],
+    [9,0,0,0,0,0,0,0,0,0,0,9],
     [9,9,9,9,9,9,9,9,9,9,9,9],
   ];  
 }
@@ -33,7 +34,7 @@ Board.prototype.setPieceInBoard = function(piece) {
 Board.prototype.checkCollision = function(piece) {  
   for (var row = 0; row < piece.shape.length; row++) {    
     for (var col = 0; col < piece.shape[0].length; col++) {
-      if (piece.shape[row][col] !== 0 && this.boardMatrix[(row + piece.y)][(col + piece.x)] !== 0) {
+      if (piece.shape[row][col] !== 0 && this.boardMatrix[(row + piece.position.y)][(col + piece.position.x)] !== 0) {
         return true;
       }
     }
@@ -59,22 +60,16 @@ Board.prototype.clearLines = function(rows) {
 }
 
 Board.prototype.getGhost = function(piece) {
-  var pieceAux = piece.clone();
-  console.log(piece === pieceAux)
-  pieceAux.y = pieceAux.position.y;
-  pieceAux.x = pieceAux.position.x;
-  pieceAux =  this._getGhost(pieceAux);
-  pieceAux.position.y = pieceAux.y - 5;
-  pieceAux.position.x = pieceAux.x;
-  return pieceAux;
+  var pieceAux = JSON.parse(JSON.stringify(piece));  
+  return this._getGhost(pieceAux);    
 }
 
 Board.prototype._getGhost = function(piece) {
   if (this.checkCollision(piece)) {
-    piece.y--;
+    piece.position.y--;
     return piece;
   } else {
-    piece.y++;
+    piece.position.y++;
     return this._getGhost(piece);
   }
 }

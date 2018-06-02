@@ -60,10 +60,13 @@ Board.prototype.clearLines = function(rows) {
 }
 
 Board.prototype.getGhost = function(piece) {
-  var pieceAux = JSON.parse(JSON.stringify(piece));
-  return this._getGhost(pieceAux);
-  // return this._getGhost(piece.clone());
+  return this._getGhost(piece);
 }
+
+// Board.prototype.getGhost = function(piece) {
+//   var pieceAux = JSON.parse(JSON.stringify(piece));
+//   return this._getGhost(pieceAux);
+// }
 
 Board.prototype._getGhost = function(piece) {
   if (this.checkCollision(piece)) {

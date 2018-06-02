@@ -9,23 +9,23 @@ var Painter = function () {
     y: -20
   }
 
-  // var colors = {
-  //   background: "#661039",
-  //   cells: "#974e7a",
-  //   fullCells: "#BD1550",
-  //   ghost: "#4d1c39",
-  //   pieces: "#e29f39",
-  //   text: "#ECD078"
-  // }
-
   var colors = {
-    background: "#1e306e",
-    cells: "#563672",
-    fullCells: "#c6427b",
-    ghost: "#8e3c77",
-    pieces: "#fe4880",
-    text: "#fff"
+    background: "#661039",
+    cells: "#974e7a",
+    fullCells: "#BD1550",
+    ghost: "#4d1c39",
+    pieces: "#e29f39",
+    text: "#ECD078"
   }
+
+  // var colors = {
+  //   background: "#1e306e",
+  //   cells: "#563672",
+  //   fullCells: "#c6427b",
+  //   ghost: "#8e3c77",
+  //   pieces: "#fe4880",
+  //   text: "#fff"
+  // }
 
   function centerBoard() {
     var boardWidth = (cellSize + cellSeparation) * 12;
@@ -65,7 +65,6 @@ var Painter = function () {
     
     drawPiece : function(piece, ghost) {
       ctx.beginPath();
-
       if (ghost) ctx.fillStyle = colors.ghost;
       else ctx.fillStyle = colors.pieces;
 
@@ -82,6 +81,10 @@ var Painter = function () {
         }
       }
       ctx.closePath();
+    },
+
+    drawPieceNoBoard: function() {
+
     },
 
     drawText: function(text) {

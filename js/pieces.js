@@ -26,30 +26,30 @@ Piece.prototype.getPossiblePieceState = function(state) {
       y: this.position.y
     }
   };
+  
+  switch (state) {
+    case "down":
+    potentialPieceState.position.y = this.position.y + 1;
+    break;
+    case "right":
+    potentialPieceState.position.x = this.position.x + 1;
+    break;
+    case "left":
+    potentialPieceState.position.x = this.position.x - 1;
+    break;
+    case "rotation":
+    var possibleRotation = this.rotationPosition === 3 ? 0 : this.rotationPosition + 1;      
+    potentialPieceState.shape = this.rotations[possibleRotation];
+    break;
+  }
+  
+  return potentialPieceState;
+}
 
 Piece.prototype.clone = function() {
   var pieceClone = JSON.parse(JSON.stringify(this));
   pieceClone.__proto__ = this.__proto__;
   return pieceClone;
-}
-  
-  switch (state) {
-    case "down":
-      potentialPieceState.position.y = this.position.y + 1;
-      break;
-    case "right":
-      potentialPieceState.position.x = this.position.x + 1;
-      break;
-    case "left":
-      potentialPieceState.position.x = this.position.x - 1;
-      break;
-    case "rotation":
-      var possibleRotation = this.rotationPosition === 3 ? 0 : this.rotationPosition + 1;      
-      potentialPieceState.shape = this.rotations[possibleRotation];
-      break;
-  }
-
-  return potentialPieceState;
 }
 
 function TPiece() {
@@ -78,6 +78,7 @@ function TPiece() {
   ];
   
   this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
 }
 
 TPiece.prototype = Object.create(Piece.prototype);
@@ -109,6 +110,7 @@ function IPiece() {
   ];
   
   this.shape = this.rotations[0];
+  this.color = "rgba(0, 0, 200, 1)";
 }
 
 IPiece.prototype = Object.create(Piece.prototype);
@@ -140,6 +142,7 @@ function OPiece() {
   ];
   
   this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
 }
 
 OPiece.prototype = Object.create(Piece.prototype);
@@ -171,6 +174,7 @@ function LPiece() {
   ];
   
   this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
 }
 
 LPiece.prototype = Object.create(Piece.prototype);
@@ -202,6 +206,7 @@ function JPiece() {
   ];
   
   this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
 }
 
 JPiece.prototype = Object.create(Piece.prototype);
@@ -233,6 +238,7 @@ function SPiece() {
   ];
   
   this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
 }
 
 SPiece.prototype = Object.create(Piece.prototype);
@@ -264,6 +270,7 @@ function ZPiece() {
   ];
   
   this.shape = this.rotations[0];
+  this.color = "rgba(0, 200, 0, 1)";
 }
 
 ZPiece.prototype = Object.create(Piece.prototype);

@@ -1,3 +1,5 @@
+//"use strict";
+
 window.onload = function() {
   var canvas = document.createElement("canvas");
   canvas.width = 600;
@@ -7,16 +9,15 @@ window.onload = function() {
   document.body.prepend(canvas);
   Painter.setCanvas(canvas);
 
-  this.game = new Game(canvas);
-  this.game.start();
+  var game = new Game(canvas);
+  game.start();
 
   document.onkeydown = function(e) {
-    // Restart game fails
-    // if (e.keyCode === 82) {
-    //   delete this.game;
-    //   this.game = new Game(canvas);
-    //   this.game.start();
-    // }
-    this.game.onkeydown(e.keyCode);
-  }.bind(this);
+    
+    if (e.keyCode === 82) {
+      game.restart();
+    }
+
+    game.onkeydown(e.keyCode);
+  };
 };

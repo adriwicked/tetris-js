@@ -1,8 +1,8 @@
 function PieceViewer(position) {
   this.position = position;
-  this.pieces = {};
+  this.piece = {};
 }
 
-PieceViewer.prototype.changePiece = function(piece) {
-  
+PieceViewer.prototype.changePiece = function(clonedPiece) {
+  this.piece = clonedPiece;
 }

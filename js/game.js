@@ -2,25 +2,47 @@ function Game() {
   this.frameCounter = 0;
   this.framesTick = 40;
 
+  this.board = undefined;
+  this.currentPieceViewer = undefined;
+  this.intervalId = undefined;
+
+  this.init();
+}
+
+Game.prototype.init = function() {
   this.board = new Board();
-  this.currentPieceViewer = new PieceViewer();
+  this.currentPieceViewer = new PieceViewer({ x: 50, y: 50 });
 }
 
 Game.prototype.start = function() {
   this.createNewPiece();
   
-  setInterval(function() {        
+  if (!this.intervalId) {
+    this.intervalId = setInterval(function() {        
     
-    this.tickUpdate();
-    
-    Painter.clearCanvas();
-    Painter.drawBackground();
-    Painter.drawBoard(this.board);
-    Painter.drawPiece(this.board.getGhost(this.fallingPiece), true);
-    Painter.drawPiece(this.fallingPiece, false);
-    Painter.drawText("I R O N T E T R I S");
-    
-  }.bind(this), 32);
+      this.tickUpdate();
+      
+      Painter.clearCanvas();
+      Painter.drawBackground();
+      Painter.drawBoard(this.board);
+      Painter.drawPiece(this.board.getGhost(this.fallingPiece.clone()), true);
+      Painter.drawPiece(this.fallingPiece, false);
+      // Painter.drawPiece(this.currentPieceViewer.piece, true);
+      Painter.drawText("I R O N T E T R I S");
+      
+    }.bind(this), 32);
+  }
+  
+}
+
+Game.prototype.stop =  function() {
+  clearInterval(this.intervalId);
+}
+
+Game.prototype.restart = function() {
+  this.stop();
+  this.init();
+  this.start();
 }
 
 Game.prototype.tickUpdate = function () {
@@ -36,9 +58,8 @@ Game.prototype.tickUpdate = function () {
       this.board.setPieceInBoard(this.fallingPiece);
       this.createNewPiece();
     }
-    
-    // console.log(this.fallingPiece.clone());
 
+    // Check lines and clear them
     this.clearLines();
   }
 }
@@ -52,7 +73,7 @@ Game.prototype.clearLines = function() {
 
 Game.prototype.createNewPiece = function() {  
   this.fallingPiece = PieceFactory();
-  // currentPieceViewer.changePiece(this.fallingPiece.clone());
+  this.currentPieceViewer.changePiece(this.fallingPiece.clone());
 };
 
 Game.prototype.movePieceDown = function() {  

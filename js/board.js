@@ -1,6 +1,6 @@
 function Board() {  
   this.boardMatrix = [
-    [9,0,0,0,0,0,0,0,0,0,0,9], // This row won't be painted. Just to spawn pieces in range
+    [9,0,0,0,0,0,0,0,0,0,0,9], // This row won't be painted. It's just to spawn pieces in range.
     [9,0,0,0,0,0,0,0,0,0,0,9],
     [9,0,0,0,0,0,0,0,0,0,0,9],
     [9,0,0,0,0,0,0,0,0,0,0,9],
@@ -60,8 +60,9 @@ Board.prototype.clearLines = function(rows) {
 }
 
 Board.prototype.getGhost = function(piece) {
-  var pieceAux = JSON.parse(JSON.stringify(piece));  
-  return this._getGhost(pieceAux);    
+  var pieceAux = JSON.parse(JSON.stringify(piece));
+  return this._getGhost(pieceAux);
+  // return this._getGhost(piece.clone());
 }
 
 Board.prototype._getGhost = function(piece) {

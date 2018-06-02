@@ -1,3 +1,8 @@
+@font-face {
+  font-family: boldYear;
+  src: url(./fonts/bold_year/boldyear.otf);
+}
+
 #canvas {  
   padding-left: 0;
   padding-right: 0;

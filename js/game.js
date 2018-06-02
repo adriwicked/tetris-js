@@ -3,30 +3,32 @@ function Game() {
   this.framesTick = 40;
 
   this.board = new Board();
-  
-  this.fallingPiece = new TPiece();
+  this.currentPieceViewer = new PieceViewer();
 }
 
 Game.prototype.start = function() {
+  this.createNewPiece();
+  
   setInterval(function() {        
-
+    
     this.tickUpdate();
-
+    
     Painter.clearCanvas();
     Painter.drawBackground();
     Painter.drawBoard(this.board);
     Painter.drawPiece(this.board.getGhost(this.fallingPiece), true);
-    Painter.drawPiece(this.fallingPiece, false);    
-
+    Painter.drawPiece(this.fallingPiece, false);
+    Painter.drawText("I R O N T E T R I S");
+    
   }.bind(this), 32);
 }
 
 Game.prototype.tickUpdate = function () {
   this.frameCounter++;
-
+  
   if (this.frameCounter >= this.framesTick) {
     this.frameCounter = 0;
-        
+    
     // Piece move down logic
     if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("down"))) {
       this.fallingPiece.down();
@@ -35,6 +37,8 @@ Game.prototype.tickUpdate = function () {
       this.createNewPiece();
     }
     
+    // console.log(this.fallingPiece.clone());
+
     this.clearLines();
   }
 }
@@ -48,6 +52,7 @@ Game.prototype.clearLines = function() {
 
 Game.prototype.createNewPiece = function() {  
   this.fallingPiece = PieceFactory();
+  // currentPieceViewer.changePiece(this.fallingPiece.clone());
 };
 
 Game.prototype.movePieceDown = function() {  

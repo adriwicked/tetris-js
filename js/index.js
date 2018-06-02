@@ -11,11 +11,12 @@ window.onload = function() {
   this.game.start();
 
   document.onkeydown = function(e) {
-    if (e.keyCode === 82) {
-      delete this.game;
-      this.game = new Game(canvas);
-      this.game.start();
-    }
+    // Restart game fails
+    // if (e.keyCode === 82) {
+    //   delete this.game;
+    //   this.game = new Game(canvas);
+    //   this.game.start();
+    // }
     this.game.onkeydown(e.keyCode);
   }.bind(this);
 };

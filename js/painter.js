@@ -4,19 +4,33 @@ var Painter = function () {
   var cellSize = 25;
   var cellSeparation = 4;
   var boardPosition = { x: 0, y: 0 };
+  var textOffset = {
+    x: 55,
+    y: -20
+  }
+
+  // var colors = {
+  //   background: "#661039",
+  //   cells: "#974e7a",
+  //   fullCells: "#BD1550",
+  //   ghost: "#4d1c39",
+  //   pieces: "#e29f39",
+  //   text: "#ECD078"
+  // }
 
   var colors = {
-    background: "#542437",
-    cells: "#53777A",
-    ghost: "#446163",
-    pieces: "#C02942",
-    text: "#ECD078"
+    background: "#1e306e",
+    cells: "#563672",
+    fullCells: "#c6427b",
+    ghost: "#8e3c77",
+    pieces: "#fe4880",
+    text: "#fff"
   }
 
   function centerBoard() {
     var boardWidth = (cellSize + cellSeparation) * 12;
     boardPosition.x = canvas.width / 2 - boardWidth / 2;
-    boardPosition.y = canvas.height / 12;
+    boardPosition.y = canvas.height / 8;
   }
 
   return {
@@ -31,7 +45,7 @@ var Painter = function () {
     },
 
     drawBackground: function() {
-      ctx.fillStyle = "#542437";
+      ctx.fillStyle = colors.background;
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     },
 
@@ -39,7 +53,7 @@ var Painter = function () {
       ctx.beginPath();
       for (var col = 1; col < board.boardMatrix[0].length - 1; col++) {
         for (var row = 1; row < board.boardMatrix.length - 1; row++) {
-          ctx.fillStyle = board.boardMatrix[row][col] === 0 ? colors.cells : colors.pieces;
+          ctx.fillStyle = board.boardMatrix[row][col] === 0 ? colors.cells : colors.fullCells;
           ctx.fillRect (boardPosition.x + (cellSize + cellSeparation) * col,
                         boardPosition.y + (cellSize + cellSeparation) * row,
                         cellSize,
@@ -68,6 +82,13 @@ var Painter = function () {
         }
       }
       ctx.closePath();
+    },
+
+    drawText: function(text) {
+      ctx.font = "32px boldYear";
+      ctx.fillStyle = colors.text;
+      ctx.textBaseline = "top";
+      ctx.fillText(text, boardPosition.x + textOffset.x, boardPosition.y + textOffset.y);
     }
   }
 }();

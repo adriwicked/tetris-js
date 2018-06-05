@@ -3,7 +3,7 @@ function Game() {
   this.framesTick = 40;
 
   this.board = undefined;
-  this.currentPieceViewer = undefined;
+  this.pieceRetainedViewer = undefined;
   this.intervalId = undefined;
 
   this.init();
@@ -11,7 +11,7 @@ function Game() {
 
 Game.prototype.init = function() {
   this.board = new Board();
-  this.currentPieceViewer = new PieceViewer({ x: 50, y: 50 });
+  this.pieceRetainedViewer = new PieceViewer({ x: 0, y: 0 });
 }
 
 Game.prototype.start = function() {
@@ -27,7 +27,7 @@ Game.prototype.start = function() {
       Painter.drawBoard(this.board);
       Painter.drawPiece(this.board.getGhost(this.fallingPiece.clone()), true);
       Painter.drawPiece(this.fallingPiece, false);
-      // Painter.drawPiece(this.currentPieceViewer.piece, true);
+      Painter.drawPieceInViewer(this.pieceRetainedViewer.piece, this.pieceRetainedViewer);
       Painter.drawText("I R O N T E T R I S");
       
     }.bind(this), 32);
@@ -36,10 +36,11 @@ Game.prototype.start = function() {
 }
 
 Game.prototype.stop =  function() {
-  clearInterval(this.intervalId);
+  clearInterval(this.intervalId); 
+  this.intervalId = undefined; 
 }
 
-Game.prototype.restart = function() {
+Game.prototype.restart = function() {  
   this.stop();
   this.init();
   this.start();
@@ -73,7 +74,7 @@ Game.prototype.clearLines = function() {
 
 Game.prototype.createNewPiece = function() {  
   this.fallingPiece = PieceFactory();
-  this.currentPieceViewer.changePiece(this.fallingPiece.clone());
+  this.pieceRetainedViewer.changePiece(this.fallingPiece.clone());
 };
 
 Game.prototype.movePieceDown = function() {  
@@ -107,27 +108,21 @@ Game.prototype.dropPiece = function() {
   this.createNewPiece();
 }
 
-Game.prototype.TOP = 38;
-Game.prototype.DOWN = 40;
-Game.prototype.LEFT = 37;
-Game.prototype.RIGHT = 39;
-Game.prototype.SPACE = 32;
-
 Game.prototype.onkeydown = function(key) {
   switch(key) {
-    case this.TOP:
+    case TOP:
       this.rotatePiece();     
       break;
-    case this.DOWN: 
+    case DOWN: 
       this.movePieceDown();
       break;
-    case this.RIGHT:
+    case RIGHT:
       this.movePiece(true);
       break;
-    case this.LEFT:
+    case LEFT:
       this.movePiece(false);
       break;
-    case this.SPACE:
+    case SPACE:
       this.dropPiece();
       break;
   }

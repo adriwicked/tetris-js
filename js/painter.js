@@ -9,23 +9,23 @@ var Painter = function () {
     y: -20
   }
 
-  var colors = {
-    background: "#661039",
-    cells: "#974e7a",
-    fullCells: "#BD1550",
-    ghost: "#4d1c39",
-    pieces: "#e29f39",
-    text: "#ECD078"
-  }
-
   // var colors = {
-  //   background: "#1e306e",
-  //   cells: "#563672",
-  //   fullCells: "#c6427b",
-  //   ghost: "#8e3c77",
-  //   pieces: "#fe4880",
-  //   text: "#fff"
+  //   background: "#661039",
+  //   cells: "#974e7a",
+  //   fullCells: "#BD1550",
+  //   ghost: "#4d1c39",
+  //   pieces: "#e29f39",
+  //   text: "#ECD078"
   // }
+
+  var colors = {
+    background: "#1e306e",
+    cells: "#563672",
+    fullCells: "#c6427b",
+    ghost: "#8e3c77",
+    pieces: "#fe4880",
+    text: "#fff"
+  }
 
   function centerBoard() {
     var boardWidth = (cellSize + cellSeparation) * 12;
@@ -83,8 +83,23 @@ var Painter = function () {
       ctx.closePath();
     },
 
-    drawPieceNoBoard: function() {
+    drawPieceInViewer: function(piece, viewer) {
+      ctx.beginPath();
 
+      ctx.fillStyle = colors.text;
+
+      for (var row = 0; row < piece.shape.length; row++) {
+        for (var col = 0; col < piece.shape[0].length; col++) {          
+          if (piece.shape[row][col] === 1) {
+            ctx.fillRect (viewer.position.x + ((cellSize + cellSeparation) * col),
+                          viewer.position.y + ((cellSize + cellSeparation) * row),
+                          cellSize,
+                          cellSize);                          
+          }          
+        }
+      }
+
+      ctx.closePath();
     },
 
     drawText: function(text) {

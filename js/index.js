@@ -14,7 +14,7 @@ window.onload = function() {
 
   document.onkeydown = function(e) {
     
-    if (e.keyCode === 82) {
+    if (e.keyCode === 82) {      
       game.restart();
     }
 

@@ -13,11 +13,6 @@ window.onload = function() {
   game.start();
 
   document.onkeydown = function(e) {
-    
-    if (e.keyCode === 82) {      
-      game.restart();
-    }
-
     game.onkeydown(e.keyCode);
   };
 };

@@ -1,4 +1,6 @@
-var PieceFactory = function() {        
+var PieceFactory = function() {
+  return {
+    getNewPiece: function() {
       switch (Math.floor(Math.random() * 7)) {
         case 0:
           return new TPiece();
@@ -25,4 +27,6 @@ var PieceFactory = function() {
           return new IPiece();
           break;
       }
+    }
   }
+}();

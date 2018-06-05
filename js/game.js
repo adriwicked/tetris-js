@@ -1,17 +1,27 @@
 function Game() {
   this.frameCounter = 0;
   this.framesTick = 40;
-
+  this.pieceQueueLength = 3;
   this.board = undefined;
-  this.pieceRetainedViewer = undefined;
+  this.fallingPiece = undefined;
+  this.retainedPiece = undefined;
+  this.nextPieces = [];
   this.intervalId = undefined;
+  this.linesCleared = 0;
 
   this.init();
 }
 
 Game.prototype.init = function() {
   this.board = new Board();
-  this.pieceRetainedViewer = new PieceViewer({ x: 0, y: 0 });
+  this.fallingPiece = undefined;
+  this.retainedPiece = undefined;
+  this.nextPieces = [];
+  this.linesCleared = 0;
+
+  for (var i = 0; i < this.pieceQueueLength; i++) {
+    this.nextPieces.push(PieceFactory.getNewPiece()); 
+  }
 }
 
 Game.prototype.start = function() {
@@ -27,12 +37,15 @@ Game.prototype.start = function() {
       Painter.drawBoard(this.board);
       Painter.drawPiece(this.board.getGhost(this.fallingPiece.clone()), true);
       Painter.drawPiece(this.fallingPiece, false);
-      Painter.drawPieceInViewer(this.pieceRetainedViewer.piece, this.pieceRetainedViewer);
-      Painter.drawText("I R O N T E T R I S");
+      if (this.retainedPiece) {
+        Painter.drawRetainedPiece(this.retainedPiece);
+      }
+      Painter.drawNextPieces(this.nextPieces);
+      Painter.drawTitle("I R O N T E T R I S");
+      Painter.drawLineCounter("Lines: " + this.linesCleared);
       
     }.bind(this), 32);
   }
-  
 }
 
 Game.prototype.stop =  function() {
@@ -57,6 +70,7 @@ Game.prototype.tickUpdate = function () {
       this.fallingPiece.down();
     } else {
       this.board.setPieceInBoard(this.fallingPiece);
+      this.checkLost();
       this.createNewPiece();
     }
 
@@ -67,14 +81,26 @@ Game.prototype.tickUpdate = function () {
 
 Game.prototype.clearLines = function() {  
   var lines = this.board.checkLines();
-    if (lines.length > 0) {
-      this.board.clearLines(lines);
-    }
+  if (lines.length > 0) {
+    this.linesCleared += lines.length;
+    this.board.clearLines(lines);
+  }
 };
 
+Game.prototype.checkLost = function() {
+  if (this.board.checkLost()) {
+    this.lose();
+  }
+}
+
+Game.prototype.lose = function () {
+  alert("You lost");
+  this.restart();
+}
+
 Game.prototype.createNewPiece = function() {  
-  this.fallingPiece = PieceFactory();
-  this.pieceRetainedViewer.changePiece(this.fallingPiece.clone());
+  this.fallingPiece = this.nextPieces.shift();
+  this.nextPieces.push(PieceFactory.getNewPiece()); 
 };
 
 Game.prototype.movePieceDown = function() {  
@@ -102,10 +128,34 @@ Game.prototype.rotatePiece = function() {
 }
 
 Game.prototype.dropPiece = function() {
+  this.checkLost();
   var ghost = this.board.getGhost(this.fallingPiece);  
-  this.board.setPieceInBoard(ghost);
+
+  if (ghost.position.y >= 0) {
+    this.board.setPieceInBoard(ghost);
+  } else {
+    this.lose();
+  }
   this.clearLines();
   this.createNewPiece();
+}
+
+Game.prototype.retainPiece = function() {
+  if (this.retainedPiece) {
+    var auxPiece = this.fallingPiece.clone();
+    auxPiece.resetPosition();
+  
+    if (this.retainedPiece) {
+      this.fallingPiece = this.retainedPiece;
+    }
+  
+    this.retainedPiece = auxPiece;
+  } else {
+    this.retainedPiece = this.fallingPiece;
+    this.retainedPiece.resetPosition();
+    this.createNewPiece();
+  }
+
 }
 
 Game.prototype.onkeydown = function(key) {
@@ -124,6 +174,12 @@ Game.prototype.onkeydown = function(key) {
       break;
     case SPACE:
       this.dropPiece();
+      break;
+    case SHIFT:
+      this.retainPiece();
+      break;
+    case R:
+      this.restart();
       break;
   }
 }

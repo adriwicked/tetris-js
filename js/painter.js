@@ -3,7 +3,11 @@ var Painter = function () {
   var ctx = {};
   var cellSize = 25;
   var cellSeparation = 4;
+  var pieceSeparation = 8;
   var boardPosition = { x: 0, y: 0 };
+  var retainedPiecePosition = { x: 40, y:150 };
+  var nextPiecesPosition = { x: 150, y: 650 };
+  var lineCounterPosition = { x: 475, y:150 };
   var textOffset = {
     x: 55,
     y: -20
@@ -31,6 +35,21 @@ var Painter = function () {
     var boardWidth = (cellSize + cellSeparation) * 12;
     boardPosition.x = canvas.width / 2 - boardWidth / 2;
     boardPosition.y = canvas.height / 8;
+  }
+
+  function drawPieceByPos(piece, position) {
+    ctx.beginPath();
+      for (var row = 0; row < piece.shape.length; row++) {
+        for (var col = 0; col < piece.shape[0].length; col++) {
+          if (piece.shape[row][col] === 1) {
+            ctx.fillRect (position.x + ((cellSize + cellSeparation) * col),
+                          position.y + ((cellSize + cellSeparation) * row),
+                          cellSize,
+                          cellSize);                         
+          }          
+        }
+      }
+    ctx.closePath();
   }
 
   return {
@@ -83,7 +102,7 @@ var Painter = function () {
       ctx.closePath();
     },
 
-    drawPieceInViewer: function(piece, viewer) {
+    drawRetainedPiece: function(piece) {
       ctx.beginPath();
 
       ctx.fillStyle = colors.text;
@@ -91,8 +110,8 @@ var Painter = function () {
       for (var row = 0; row < piece.shape.length; row++) {
         for (var col = 0; col < piece.shape[0].length; col++) {          
           if (piece.shape[row][col] === 1) {
-            ctx.fillRect (viewer.position.x + ((cellSize + cellSeparation) * col),
-                          viewer.position.y + ((cellSize + cellSeparation) * row),
+            ctx.fillRect (retainedPiecePosition.x + ((cellSize + cellSeparation) * col),
+                          retainedPiecePosition.y + ((cellSize + cellSeparation) * row),
                           cellSize,
                           cellSize);                          
           }          
@@ -102,11 +121,33 @@ var Painter = function () {
       ctx.closePath();
     },
 
-    drawText: function(text) {
+    drawNextPieces: function(nextPieces) {
+      ctx.beginPath();
+
+      ctx.fillStyle = colors.text;
+
+      for (var piece = 0; piece < nextPieces.length; piece++) {
+        // debugger;
+        drawPieceByPos(nextPieces[piece], 
+          { x: nextPiecesPosition.x + piece * (4 * cellSize + pieceSeparation),
+            y: nextPiecesPosition.y });        
+      }
+
+      ctx.closePath();
+    },
+
+    drawTitle: function(text) {
       ctx.font = "32px boldYear";
       ctx.fillStyle = colors.text;
       ctx.textBaseline = "top";
       ctx.fillText(text, boardPosition.x + textOffset.x, boardPosition.y + textOffset.y);
+    }, 
+
+    drawLineCounter: function(text) {
+      ctx.font = "28px boldYear";
+      ctx.fillStyle = colors.text;
+      ctx.textBaseline = "top";
+      ctx.fillText(text, lineCounterPosition.x, lineCounterPosition.y);
     }
   }
 }();

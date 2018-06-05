@@ -42,6 +42,10 @@ Board.prototype.checkCollision = function(piece) {
   return false;
 };
 
+Board.prototype.checkLost = function() {
+  return this.boardMatrix[0].includes(1);
+}
+
 Board.prototype.checkLines = function() {
   var rowsWithLine = [];
   for (var row = 0; row < this.boardMatrix.length - 1; row++) {

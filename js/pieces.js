@@ -2,7 +2,11 @@ function Piece() {
   this.position = { x: 4, y: 0 };
   this.shape = [[]];
   this.rotationPosition = 0;
-  this.color = "rgba(200, 0, 0, 1)";
+}
+
+Piece.prototype.resetPosition = function() {
+  this.position = { x: 4, y: 0 };
+  this.shape = this.rotations[0]
 }
 
 Piece.prototype.down = function() {  
@@ -78,7 +82,6 @@ function TPiece() {
   ];
   
   this.shape = this.rotations[0];
-  this.color = "rgba(0, 200, 0, 1)";
 }
 
 TPiece.prototype = Object.create(Piece.prototype);
@@ -110,7 +113,6 @@ function IPiece() {
   ];
   
   this.shape = this.rotations[0];
-  this.color = "rgba(0, 0, 200, 1)";
 }
 
 IPiece.prototype = Object.create(Piece.prototype);
@@ -142,7 +144,6 @@ function OPiece() {
   ];
   
   this.shape = this.rotations[0];
-  this.color = "rgba(0, 200, 0, 1)";
 }
 
 OPiece.prototype = Object.create(Piece.prototype);
@@ -174,7 +175,6 @@ function LPiece() {
   ];
   
   this.shape = this.rotations[0];
-  this.color = "rgba(0, 200, 0, 1)";
 }
 
 LPiece.prototype = Object.create(Piece.prototype);
@@ -206,7 +206,6 @@ function JPiece() {
   ];
   
   this.shape = this.rotations[0];
-  this.color = "rgba(0, 200, 0, 1)";
 }
 
 JPiece.prototype = Object.create(Piece.prototype);
@@ -238,7 +237,6 @@ function SPiece() {
   ];
   
   this.shape = this.rotations[0];
-  this.color = "rgba(0, 200, 0, 1)";
 }
 
 SPiece.prototype = Object.create(Piece.prototype);
@@ -270,7 +268,6 @@ function ZPiece() {
   ];
   
   this.shape = this.rotations[0];
-  this.color = "rgba(0, 200, 0, 1)";
 }
 
 ZPiece.prototype = Object.create(Piece.prototype);

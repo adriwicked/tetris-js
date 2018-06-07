@@ -67,11 +67,6 @@ Board.prototype.getGhost = function(piece) {
   return this._getGhost(piece);
 }
 
-// Board.prototype.getGhost = function(piece) {
-//   var pieceAux = JSON.parse(JSON.stringify(piece));
-//   return this._getGhost(pieceAux);
-// }
-
 Board.prototype._getGhost = function(piece) {
   if (this.checkCollision(piece)) {
     piece.position.y--;

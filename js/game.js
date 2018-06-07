@@ -6,6 +6,7 @@ function Game() {
   this.fallingPiece = undefined;
   this.retainedPiece = undefined;
   this.nextPieces = [];
+  this.shaker = undefined;
   this.intervalId = undefined;
   this.linesCleared = 0;
 
@@ -14,6 +15,7 @@ function Game() {
 
 Game.prototype.init = function() {
   this.board = new Board();
+  this.shaker = new Shaker();
   this.fallingPiece = undefined;
   this.retainedPiece = undefined;
   this.nextPieces = [];
@@ -133,6 +135,7 @@ Game.prototype.dropPiece = function() {
 
   if (ghost.position.y >= 0) {
     this.board.setPieceInBoard(ghost);
+    this.shaker.shakeSomething(Painter.getBoardPosition());
   } else {
     this.lose();
   }

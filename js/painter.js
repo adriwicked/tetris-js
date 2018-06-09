@@ -6,8 +6,11 @@ var Painter = function () {
   var pieceSeparation = 8;
   var boardPosition = { x: 0, y: 0 };
   var retainedPiecePosition = { x: 40, y:150 };
-  var nextPiecesPosition = { x: 150, y: 650 };
-  var lineCounterPosition = { x: 475, y:150 };
+  var nextPiecesPosition = { x: 150, y: 660 };
+  var lineCounterPosition = { x: 475, y: 150 };
+  var retainerTextPosition = { x: 20, y: 280 };
+  var nextPiecesTextPosition = { x: 240, y: 615 };
+  var levelPosition = { x: 475, y: 200 };
   var textOffset = {
     x: 55,
     y: -20
@@ -131,7 +134,6 @@ var Painter = function () {
       ctx.fillStyle = colors.text;
 
       for (var piece = 0; piece < nextPieces.length; piece++) {
-        // debugger;
         drawPieceByPos(nextPieces[piece], 
           { x: nextPiecesPosition.x + piece * (4 * cellSize + pieceSeparation),
             y: nextPiecesPosition.y });        
@@ -152,6 +154,27 @@ var Painter = function () {
       ctx.fillStyle = colors.text;
       ctx.textBaseline = "top";
       ctx.fillText(text, lineCounterPosition.x, lineCounterPosition.y);
+    },
+
+    drawLevel: function(text) {
+      ctx.font = "28px boldYear";
+      ctx.fillStyle = colors.text;
+      ctx.textBaseline = "top";
+      ctx.fillText(text, levelPosition.x, levelPosition.y);
+    },
+
+    drawRetainerText: function(text) {
+      ctx.font = "22px boldYear";
+      ctx.fillStyle = colors.text;
+      ctx.textBaseline = "top";
+      ctx.fillText(text, retainerTextPosition.x, retainerTextPosition.y);
+    },
+
+    drawNextPiecesText: function(text) {
+      ctx.font = "22px boldYear";
+      ctx.fillStyle = colors.text;
+      ctx.textBaseline = "top";
+      ctx.fillText(text, nextPiecesTextPosition.x, nextPiecesTextPosition.y);
     }
   }
 }();

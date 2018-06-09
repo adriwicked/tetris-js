@@ -9,7 +9,15 @@ function Game() {
   this.shaker = undefined;
   this.intervalId = undefined;
   this.linesCleared = 0;
-
+  this.retainOnce = false;
+  this.levels = [
+    { tick: 50, lvlUpLines: 20 },
+    { tick: 30, lvlUpLines: 40 },
+    { tick: 20, lvlUpLines: 60 },
+    { tick: 10, lvlUpLines: 80 },
+    { tick: 5, lvlUpLines: 100 }
+  ];
+  this.currentLevel = 0;
   this.init();
 }
 
@@ -20,6 +28,8 @@ Game.prototype.init = function() {
   this.retainedPiece = undefined;
   this.nextPieces = [];
   this.linesCleared = 0;
+  this.retainOnce = false;
+  this.currentLevel = 0;
 
   for (var i = 0; i < this.pieceQueueLength; i++) {
     this.nextPieces.push(PieceFactory.getNewPiece()); 
@@ -45,6 +55,9 @@ Game.prototype.start = function() {
       Painter.drawNextPieces(this.nextPieces);
       Painter.drawTitle("I R O N T E T R I S");
       Painter.drawLineCounter("Lines: " + this.linesCleared);
+      Painter.drawLevel("Level: " + this.currentLevel);
+      Painter.drawRetainerText("Hold (Shift)");
+      Painter.drawNextPiecesText("Next pieces");
       
     }.bind(this), 32);
   }
@@ -64,14 +77,16 @@ Game.prototype.restart = function() {
 Game.prototype.tickUpdate = function () {
   this.frameCounter++;
   
-  if (this.frameCounter >= this.framesTick) {
+  if (this.frameCounter >= this.levels[this.currentLevel].tick) {
     this.frameCounter = 0;
-    
+    SoundManager.tick();
+
     // Piece move down logic
     if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("down"))) {
       this.fallingPiece.down();
     } else {
       this.board.setPieceInBoard(this.fallingPiece);
+      this.retainOnce = false;
       this.checkLost();
       this.createNewPiece();
     }
@@ -86,8 +101,17 @@ Game.prototype.clearLines = function() {
   if (lines.length > 0) {
     this.linesCleared += lines.length;
     this.board.clearLines(lines);
+    this.checkLevel()
   }
 };
+
+Game.prototype.checkLevel = function() {
+  if (this.linesCleared >= this.levels[this.currentLevel].lvlUpLines) {
+    if (this.currentLevel < this.levels.length - 1) {
+      this.currentLevel++;
+    }
+  }
+}
 
 Game.prototype.checkLost = function() {
   if (this.board.checkLost()) {
@@ -107,7 +131,8 @@ Game.prototype.createNewPiece = function() {
 
 Game.prototype.movePieceDown = function() {  
   if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("down"))) {
-    this.fallingPiece.down();     
+    this.fallingPiece.down(); 
+    SoundManager.move();    
   }
 };
 
@@ -115,10 +140,12 @@ Game.prototype.movePiece = function(right) {
   if(right) {
     if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("right"))) {
       this.fallingPiece.move(right);
+      SoundManager.move();
     }
   } else {
     if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("left"))) {
       this.fallingPiece.move(right);
+      SoundManager.move();
     }
   }
 };
@@ -131,10 +158,12 @@ Game.prototype.rotatePiece = function() {
 
 Game.prototype.dropPiece = function() {
   this.checkLost();
+  SoundManager.drop();
   var ghost = this.board.getGhost(this.fallingPiece);  
 
   if (ghost.position.y >= 0) {
     this.board.setPieceInBoard(ghost);
+    this.retainOnce = false;
     this.shaker.shakeSomething(Painter.getBoardPosition());
   } else {
     this.lose();
@@ -144,21 +173,24 @@ Game.prototype.dropPiece = function() {
 }
 
 Game.prototype.retainPiece = function() {
-  if (this.retainedPiece) {
-    var auxPiece = this.fallingPiece.clone();
-    auxPiece.resetPosition();
-  
-    if (this.retainedPiece) {
-      this.fallingPiece = this.retainedPiece;
-    }
-  
-    this.retainedPiece = auxPiece;
-  } else {
-    this.retainedPiece = this.fallingPiece;
-    this.retainedPiece.resetPosition();
-    this.createNewPiece();
-  }
+  if (!this.retainOnce) {
+    this.retainOnce = true;
 
+    if (this.retainedPiece) {
+      var auxPiece = this.fallingPiece.clone();
+      auxPiece.resetPosition();
+    
+      if (this.retainedPiece) {
+        this.fallingPiece = this.retainedPiece;
+      }
+    
+      this.retainedPiece = auxPiece;
+    } else {
+      this.retainedPiece = this.fallingPiece;
+      this.retainedPiece.resetPosition();
+      this.createNewPiece();
+    }
+  }
 }
 
 Game.prototype.onkeydown = function(key) {

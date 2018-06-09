@@ -11,7 +11,7 @@ function Game() {
   this.linesCleared = 0;
   this.retainOnce = false;
   this.levels = [
-    { tick: 50, lvlUpLines: 20 },
+    { tick: 50, lvlUpLines: 5 },
     { tick: 30, lvlUpLines: 40 },
     { tick: 20, lvlUpLines: 60 },
     { tick: 10, lvlUpLines: 80 },
@@ -79,7 +79,6 @@ Game.prototype.tickUpdate = function () {
   
   if (this.frameCounter >= this.levels[this.currentLevel].tick) {
     this.frameCounter = 0;
-    SoundManager.tick();
 
     // Piece move down logic
     if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("down"))) {
@@ -109,6 +108,7 @@ Game.prototype.checkLevel = function() {
   if (this.linesCleared >= this.levels[this.currentLevel].lvlUpLines) {
     if (this.currentLevel < this.levels.length - 1) {
       this.currentLevel++;
+      SoundManager.levelUp();
     }
   }
 }
@@ -153,6 +153,7 @@ Game.prototype.movePiece = function(right) {
 Game.prototype.rotatePiece = function() {
   if (!this.board.checkCollision(this.fallingPiece.getPossiblePieceState("rotation"))) {
     this.fallingPiece.rotate();
+    SoundManager.rotate();
   }
 }
 

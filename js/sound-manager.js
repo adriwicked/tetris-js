@@ -4,16 +4,22 @@ var SoundManager = function() {
   var moveSoundPool = [];
   var currentMoveSound = 0;
   for (var i = 0; i < poolSize; i++) {
-    moveSoundPool.push(new Sound("./res/tick.wav"));
+    moveSoundPool.push(new Sound("./res/move.wav"));
+  }
+
+  var rotateSoundPool = [];
+  var currentRotateSound = 0;
+  for (var i = 0; i < poolSize; i++) {
+    rotateSoundPool.push(new Sound("./res/rotate.wav"));
   }
 
   var dropSoundPool = [];
   var currentDropSound = 0;
   for (var i = 0; i < poolSize; i++) {
-    dropSoundPool.push(new Sound("./res/swishes/swish-7.wav"));
+    dropSoundPool.push(new Sound("./res/drop.wav"));
   }
 
-  var tickSound = new Sound("./res/tick.mp3");
+  var levelUp = new Sound("./res/level-up.wav");
 
   return {
     move: function () {
@@ -21,8 +27,13 @@ var SoundManager = function() {
       currentMoveSound = currentMoveSound < poolSize - 1 ? currentMoveSound + 1 : 0;         
     },
 
-    tick: function() {
-      // tickSound.play();
+    rotate: function () {
+      rotateSoundPool[currentRotateSound].play();
+      currentRotateSound = currentRotateSound < poolSize - 1 ? currentRotateSound + 1 : 0;         
+    },
+
+    levelUp: function() {
+      levelUp.play();
     }, 
     
     drop: function () {

@@ -2,4 +2,4 @@
 
 A TETRIS prototype developed in javascript using HTML5 canvas.
 
-[Play it here!](https://adriwicked.github.io/html5-tetris/)
+[Play it here!](https://adriwicked.github.io/tetris-js/)

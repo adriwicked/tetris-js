@@ -1,5 +1,10 @@
-# html5-tetris
+# Tetris JS
+![Alt text](/tetris-screenshot.jpg?raw=true)
 
-A TETRIS prototype developed in javascript using HTML5 canvas.
+A minimalist version of Tetris written in plain javascript.
 
-[Play it here!](https://adriwicked.github.io/tetris-js/)
+## Try it
+You can try the game [here](https://adriwicked.github.io/tetris-js/).
+
+## Credits
+[Adrián Moreno](https://www.adrianmn.com)
